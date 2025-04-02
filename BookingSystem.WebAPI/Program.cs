@@ -1,3 +1,7 @@
+using BookingSystem.DataAccessLayer;
+using BookingSystem.DataAccessLayer.Repository;
+using Microsoft.EntityFrameworkCore;
+
 namespace BookingSystem.WebAPI
 {
     public class Program
@@ -10,6 +14,16 @@ namespace BookingSystem.WebAPI
 
             builder.Services.AddControllers();
 
+            // Add repository dependencies.
+            builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+            builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+            builder.Services.AddScoped<IBookingDetailRepository, BookingDetailRepository>();
+
+            builder.Services.AddDbContext<AppDbContext>((options) =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("BookingSystem"));
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -17,8 +31,7 @@ namespace BookingSystem.WebAPI
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
-
+                        
             app.MapControllers();
 
             app.Run();

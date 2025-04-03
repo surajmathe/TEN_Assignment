@@ -1,4 +1,5 @@
 ﻿using BookingSystem.DataAccessLayer.Entity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,10 @@ namespace BookingSystem.DataAccessLayer.Repository
 
         public async Task<BookingDetails?> GetBookingDetailsById(int bookingId, CancellationToken cancellationToken)
         {
-            return await _context.BookingDetails.FindAsync(bookingId, cancellationToken);
+            return await _context.BookingDetails
+                .Include(prop => prop.Inventory)
+                .Include(prop => prop.Member)
+                .FirstOrDefaultAsync(prop => prop.Id == bookingId, cancellationToken);
         }
 
         public async Task<bool> UpdateBookingDetails(BookingDetails booking, CancellationToken cancellationToken)

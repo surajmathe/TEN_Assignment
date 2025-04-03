@@ -1,3 +1,4 @@
+using BookingSystem.Core.Features.ImportInventory;
 using BookingSystem.DataAccessLayer;
 using BookingSystem.DataAccessLayer.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,11 @@ namespace BookingSystem.WebAPI
             builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
             builder.Services.AddScoped<IBookingDetailRepository, BookingDetailRepository>();
 
+            builder.Services.AddMediatR((config) =>
+            {
+                config.RegisterServicesFromAssemblies(typeof(ImportInventoryRequest).Assembly);
+            });
+
             builder.Services.AddDbContext<AppDbContext>((options) =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("BookingSystem"));
@@ -31,9 +37,9 @@ namespace BookingSystem.WebAPI
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-                        
-            app.MapControllers();
 
+            app.MapControllers();
+                        
             app.Run();
         }
     }

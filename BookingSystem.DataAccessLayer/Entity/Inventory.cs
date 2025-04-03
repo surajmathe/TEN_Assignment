@@ -9,8 +9,8 @@ namespace BookingSystem.DataAccessLayer.Entity
     public class Inventory
     {
         public int Id { get; set; }
-        public required string Title { get; set; }
-        public required string Description { get; set; }
+        public string? Title { get; set; }
+        public string? Description { get; set; }
         public int RemainingCount { get; set; }
         public DateTime ExpirationDate { get; set; }
         public bool IsActive { get; set; }
@@ -18,5 +18,9 @@ namespace BookingSystem.DataAccessLayer.Entity
         //Navigation Property
         public List<BookingDetails>? BookingDetails { get; set; }
 
+        public Inventory()
+        {
+            IsActive = true;
+        }
     }
 }
